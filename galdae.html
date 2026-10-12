@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>갈대 Galdae — 순천대 유학생 모임</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EAF1F0; --surface:#FFFFFF; --ink:#16282C; --muted:#5B6F72;
+  --lagoon:#2E7D7A; --lagoon-ink:#FFFFFF; --reed:#C8A64B; --line:#D3E1DE; --soft:#DCEAE7;
+  --sunset:#E0876A;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1D20; --surface:#172A2E; --ink:#E6EFEE; --muted:#93A8AB;
+    --lagoon:#4FB0AB; --lagoon-ink:#0F1D20; --reed:#D9BC68; --line:#26403F; --soft:#1E3538; --sunset:#E99A80;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1D20; --surface:#172A2E; --ink:#E6EFEE; --muted:#93A8AB;
+  --lagoon:#4FB0AB; --lagoon-ink:#0F1D20; --reed:#D9BC68; --line:#26403F; --soft:#1E3538; --sunset:#E99A80;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Noto Sans KR",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.55}
+.app{max-width:520px;margin:0 auto;padding:0 18px 110px}
+h1,h2,h3{font-family:"Gowun Batang","Noto Serif KR",Georgia,serif;margin:0;line-height:1.25}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--reed);outline-offset:2px}
+
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;padding:16px 0 8px}
+.brand{display:flex;align-items:center;gap:8px;font-family:"Gowun Batang",serif;font-size:22px;font-weight:700}
+.langs{display:flex;background:var(--soft);border-radius:999px;padding:3px}
+.langs button{border:0;background:transparent;color:var(--muted);padding:5px 10px;border-radius:999px;font-size:13px}
+.langs button[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:700}
+.proto{font-size:12px;color:var(--muted);margin:0 0 14px}
+
+/* hero */
+.hero{position:relative;padding:22px 0 8px}
+.hero h1{font-size:30px;max-width:14ch}
+.hero p{color:var(--muted);margin:10px 0 0;max-width:34ch}
+.reeds{display:block;width:100%;height:84px;margin-top:10px}
+.reeds path{stroke:var(--reed);stroke-width:2.2;fill:none;stroke-linecap:round;transform-origin:bottom;animation:sway 5s ease-in-out infinite alternate}
+.reeds ellipse{fill:var(--reed)}
+@keyframes sway{from{transform:rotate(-1.2deg)}to{transform:rotate(1.4deg)}}
+@media (prefers-reduced-motion:reduce){.reeds path{animation:none}}
+
+/* section */
+.sec-title{font-size:20px;margin:26px 0 12px}
+.hint{color:var(--muted);font-size:14px;margin:-6px 0 12px}
+
+/* match (featured) */
+.match{background:var(--lagoon);color:var(--lagoon-ink);border-radius:22px;padding:20px;position:relative;overflow:hidden}
+.match .pct{font-family:"Gowun Batang",serif;font-size:44px;line-height:1}
+.match .pct small{font-size:15px;font-family:"Noto Sans KR",sans-serif;opacity:.85;margin-left:6px}
+.match h2{font-size:22px;margin:12px 0 4px}
+.match .meta{opacity:.9;font-size:14px}
+.reasons{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.reasons span{background:rgba(255,255,255,.18);padding:4px 10px;border-radius:999px;font-size:13px}
+.match .btn{background:var(--lagoon-ink);color:var(--lagoon)}
+
+/* list */
+.list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.row{display:flex;gap:14px;align-items:center;padding:14px 2px;border:0;border-bottom:1px solid var(--line);background:none;color:inherit;text-align:left;width:100%}
+.emoji{flex:none;width:48px;height:48px;border-radius:14px;background:var(--soft);display:grid;place-items:center;font-size:24px}
+.row .body{flex:1;min-width:0}
+.row .t{font-weight:700}
+.row .m{color:var(--muted);font-size:13px}
+.score{flex:none;font-weight:700;color:var(--lagoon);font-size:15px}
+.joined-tag{font-size:12px;color:var(--lagoon);font-weight:700}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 12px;border-radius:999px;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.filter{overflow-x:auto;flex-wrap:nowrap;padding-bottom:6px;margin-bottom:6px}
+.filter .chip{flex:none}
+
+.btn{border:0;border-radius:14px;padding:13px 18px;font-weight:700;background:var(--lagoon);color:var(--lagoon-ink);width:100%}
+.btn.ghost{background:var(--soft);color:var(--ink)}
+.btn.warn{background:transparent;color:var(--sunset);border:1.5px solid var(--sunset)}
+
+/* forms */
+label.f{display:block;font-weight:700;margin:18px 0 8px}
+input[type=text],select{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit}
+.err{color:var(--sunset);font-size:14px;margin-top:10px;min-height:1em}
+
+/* sheet */
+.overlay{position:fixed;inset:0;background:rgba(10,20,22,.45);display:none;z-index:30}
+.overlay.open{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;background:var(--bg);
+  border-radius:24px 24px 0 0;max-height:88%;overflow-y:auto;z-index:31;
+  padding:10px 20px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(105%);transition:transform .28s ease}
+.sheet.open{transform:none}
+@media (prefers-reduced-motion:reduce){.sheet{transition:none}}
+.grab{width:40px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 14px}
+.sheet h2{font-size:24px;margin:8px 0}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15px;margin:14px 0}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0}
+.members{display:flex;flex-direction:column;gap:8px;margin:8px 0 4px}
+.member{display:flex;gap:10px;align-items:center}
+.av{width:36px;height:36px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:18px;flex:none}
+.member small{color:var(--muted)}
+.ice{background:var(--surface);border-left:4px solid var(--reed);border-radius:6px 14px 14px 6px;padding:12px 14px;margin:8px 0;font-size:15px}
+.safe{font-size:13px;color:var(--muted);margin:14px 0}
+
+/* nav */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs .in{max-width:520px;margin:0 auto;display:flex}
+nav.tabs button{flex:1;border:0;background:none;color:var(--muted);padding:10px 0 12px;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.tabs button span{font-size:20px}
+nav.tabs button[aria-current="page"]{color:var(--lagoon);font-weight:700}
+
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);
+  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+.empty{padding:26px 0;color:var(--muted)}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<nav class="tabs hidden" id="tabs"><div class="in" id="tabsIn"></div></nav>
+<div class="overlay" id="overlay"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ---------- i18n ---------- */
+const T={
+ tagline:{ko:"순천대 유학생을 위한 작은 모임",en:"Small groups for SCNU international students",mn:"Сүнчон их сургуулийн гадаад оюутнуудад зориулсан жижиг бүлгүүд"},
+ proto:{ko:"시제품입니다. 모임과 멤버는 샘플 데이터예요.",en:"Prototype. Groups and members are sample data.",mn:"Прототип. Бүлэг, гишүүд нь жишээ өгөгдөл."},
+ welcome:{ko:"갈대는 함께 자랄 때 더 단단해져요",en:"Reeds stand stronger together",mn:"Зэгс хамтдаа ургахдаа илүү бат бөх"},
+ welcomeSub:{ko:"취미와 시간이 맞는 3–6명 소모임을 찾아 드려요. 큰 동아리보다 부담이 적어요.",en:"We find 3–6 person groups that share your hobbies and free time. Less pressure than a big club.",mn:"Хобби, чөлөөт цаг тань таарах 3–6 хүний бүлгийг олж өгнө. Том дугуйлангаас дарамт бага."},
+ name:{ko:"이름 (별명도 괜찮아요)",en:"Name (a nickname is fine)",mn:"Нэр (хоч байж болно)"},
+ country:{ko:"출신 나라",en:"Home country",mn:"Эх орон"},
+ langs:{ko:"할 수 있는 언어",en:"Languages you speak",mn:"Ярьдаг хэл"},
+ hobbies:{ko:"취미 (여러 개 선택)",en:"Hobbies (pick several)",mn:"Хобби (хэд хэдийг сонго)"},
+ times:{ko:"편한 시간",en:"When you're free",mn:"Чөлөөтэй цаг"},
+ start:{ko:"내 모임 찾기",en:"Find my groups",mn:"Бүлгээ олох"},
+ needAll:{ko:"이름, 언어 1개, 취미 1개, 시간 1개 이상을 골라 주세요.",en:"Add a name and pick at least one language, hobby and time.",mn:"Нэр оруулж, хэл, хобби, цагаас дор хаяж нэгийг сонгоно уу."},
+ tabHome:{ko:"추천",en:"For you",mn:"Санал"},
+ tabGroups:{ko:"모임",en:"Groups",mn:"Бүлэг"},
+ tabCreate:{ko:"만들기",en:"Create",mn:"Үүсгэх"},
+ tabMe:{ko:"나",en:"Me",mn:"Би"},
+ hi:{ko:"안녕하세요, {n}님",en:"Hi, {n}",mn:"Сайн уу, {n}"},
+ homeSub:{ko:"이번 주 당신과 가장 잘 맞는 모임이에요.",en:"This week's best match for you.",mn:"Энэ долоо хоногт танд хамгийн сайн таарах бүлэг."},
+ match:{ko:"일치",en:"match",mn:"тохирол"},
+ open:{ko:"모임 보기",en:"View group",mn:"Бүлгийг харах"},
+ more:{ko:"이것도 잘 맞아요",en:"Also a good fit",mn:"Эдгээр нь бас таарна"},
+ myGroups:{ko:"내가 참여한 모임",en:"Groups you joined",mn:"Таны нэгдсэн бүлгүүд"},
+ noMine:{ko:"아직 참여한 모임이 없어요. 위에서 하나 골라 보세요.",en:"No groups yet. Pick one above to start.",mn:"Одоогоор бүлэг алга. Дээрээс нэгийг сонгоорой."},
+ rHobby:{ko:"같은 취미: {x}",en:"Shared hobby: {x}",mn:"Ижил хобби: {x}"},
+ rLang:{ko:"대화 언어: {x}",en:"Common language: {x}",mn:"Нийтлэг хэл: {x}"},
+ rTime:{ko:"시간 맞음: {x}",en:"Time fits: {x}",mn:"Цаг таарна: {x}"},
+ rSmall:{ko:"자리 {x}개 남음",en:"{x} spots left",mn:"{x} суудал үлдсэн"},
+ all:{ko:"전체",en:"All",mn:"Бүгд"},
+ groupsTitle:{ko:"모든 모임",en:"All groups",mn:"Бүх бүлэг"},
+ noGroups:{ko:"이 취미의 모임이 아직 없어요. 직접 만들어 보세요.",en:"No groups for this hobby yet. Create the first one.",mn:"Энэ хоббигийн бүлэг алга. Эхнийхийг нь үүсгээрэй."},
+ when:{ko:"언제",en:"When",mn:"Хэзээ"},
+ where:{ko:"어디서",en:"Where",mn:"Хаана"},
+ langInGroup:{ko:"언어",en:"Languages",mn:"Хэл"},
+ membersT:{ko:"멤버 {a}/{b}",en:"Members {a}/{b}",mn:"Гишүүд {a}/{b}"},
+ iceT:{ko:"첫 만남 대화 주제",en:"Conversation starters",mn:"Яриа эхлүүлэх сэдэв"},
+ join:{ko:"모임 참여하기",en:"Join group",mn:"Бүлэгт нэгдэх"},
+ leave:{ko:"모임 나가기",en:"Leave group",mn:"Бүлгээс гарах"},
+ full:{ko:"자리가 꽉 찼어요",en:"This group is full",mn:"Бүлэг дүүрсэн"},
+ joined:{ko:"참여했어요",en:"Joined",mn:"Нэгдлээ"},
+ left:{ko:"모임에서 나왔어요",en:"You left the group",mn:"Бүлгээс гарлаа"},
+ safe:{ko:"실제 서비스에서는 학교 이메일(@scnu.ac.kr)로 인증한 학생만 참여할 수 있어요. 첫 만남은 캠퍼스 안 공개 장소를 권해요.",en:"In the real service, only students verified with a school email (@scnu.ac.kr) can join. Meet first in a public place on campus.",mn:"Жинхэнэ үйлчилгээнд зөвхөн сургуулийн имэйлээр (@scnu.ac.kr) баталгаажсан оюутнууд нэгдэнэ. Эхний уулзалтыг кампусын нээлттэй газарт хийхийг зөвлөж байна."},
+ you:{ko:"나",en:"You",mn:"Та"},
+ createTitle:{ko:"새 모임 만들기",en:"Create a group",mn:"Шинэ бүлэг үүсгэх"},
+ createSub:{ko:"작게 시작해도 괜찮아요. 3명이면 충분해요.",en:"Starting small is fine. Three people is enough.",mn:"Жижгээр эхлэхэд болно. 3 хүн хангалттай."},
+ gTitle:{ko:"모임 이름",en:"Group name",mn:"Бүлгийн нэр"},
+ gTitlePh:{ko:"예: 수요일 저녁 산책",en:"e.g. Wednesday evening walk",mn:"ж: Лхагва оройн алхалт"},
+ gHobby:{ko:"취미",en:"Hobby",mn:"Хобби"},
+ gTime:{ko:"시간",en:"Time",mn:"Цаг"},
+ gPlace:{ko:"장소",en:"Place",mn:"Газар"},
+ gSize:{ko:"최대 인원",en:"Max people",mn:"Дээд тоо"},
+ gLang:{ko:"모임 언어",en:"Group languages",mn:"Бүлгийн хэл"},
+ gCreate:{ko:"모임 만들기",en:"Create group",mn:"Бүлэг үүсгэх"},
+ gNeed:{ko:"모임 이름, 취미, 시간, 언어를 정해 주세요.",en:"Set a name, hobby, time and language.",mn:"Нэр, хобби, цаг, хэлийг сонгоно уу."},
+ created:{ko:"모임을 만들었어요",en:"Group created",mn:"Бүлэг үүслээ"},
+ meTitle:{ko:"내 프로필",en:"My profile",mn:"Миний профайл"},
+ save:{ko:"프로필 저장",en:"Save profile",mn:"Профайл хадгалах"},
+ saved:{ko:"저장했어요",en:"Saved",mn:"Хадгаллаа"},
+ reset:{ko:"처음부터 다시 시작",en:"Start over",mn:"Эхнээс нь эхлэх"},
+ resetQ:{ko:"프로필과 참여 기록을 모두 지울까요?",en:"Delete your profile and joined groups?",mn:"Профайл болон нэгдсэн бүлгүүдийг устгах уу?"},
+ dark:{ko:"화면 테마",en:"Theme",mn:"Өнгөний горим"},
+ thAuto:{ko:"자동",en:"Auto",mn:"Автомат"},thLight:{ko:"밝게",en:"Light",mn:"Цайвар"},thDark:{ko:"어둡게",en:"Dark",mn:"Бараан"},
+ people:{ko:"명",en:"people",mn:"хүн"}
+};
+let L="ko";
+const t=(k,v={})=>{let s=(T[k]&&(T[k][L]||T[k].en))||k;for(const x in v)s=s.replace("{"+x+"}",v[x]);return s};
+const tx=o=>typeof o==="string"?o:(o[L]||o.en);
+
+/* ---------- data ---------- */
+const HOBBIES={
+ photo:{e:"📷",ko:"사진",en:"Photography",mn:"Гэрэл зураг"},
+ hiking:{e:"🥾",ko:"등산",en:"Hiking",mn:"Явган аялал"},
+ soccer:{e:"⚽",ko:"축구",en:"Soccer",mn:"Хөл бөмбөг"},
+ badminton:{e:"🏸",ko:"배드민턴",en:"Badminton",mn:"Бадминтон"},
+ cooking:{e:"🍲",ko:"요리",en:"Cooking",mn:"Хоол хийх"},
+ games:{e:"🎲",ko:"보드게임",en:"Board games",mn:"Ширээний тоглоом"},
+ dance:{e:"💃",ko:"K-pop 댄스",en:"K-pop dance",mn:"K-pop бүжиг"},
+ langex:{e:"🗣️",ko:"언어교환",en:"Language exchange",mn:"Хэл солилцоо"},
+ study:{e:"📚",ko:"같이 공부",en:"Study together",mn:"Хамт хичээл хийх"},
+ music:{e:"🎸",ko:"음악",en:"Music",mn:"Хөгжим"},
+ movies:{e:"🎬",ko:"영화",en:"Movies",mn:"Кино"},
+ cafe:{e:"☕",ko:"카페 탐방",en:"Café hopping",mn:"Кафе хэсэх"}
+};
+const TIMES={
+ wkday:{ko:"평일 저녁",en:"Weekday evenings",mn:"Ажлын өдрийн орой"},
+ fri:{ko:"금요일 저녁",en:"Friday evening",mn:"Баасан орой"},
+ sat:{ko:"토요일",en:"Saturday",mn:"Бямба"},
+ sun:{ko:"일요일",en:"Sunday",mn:"Ням"}
+};
+const LANGS={ko:"한국어",en:"English",mn:"Монгол",zh:"中文",vi:"Tiếng Việt",ja:"日本語",uz:"Oʻzbek",ne:"नेपाली"};
+const COUNTRIES={MN:["🇲🇳","Монгол"],VN:["🇻🇳","Việt Nam"],CN:["🇨🇳","中国"],UZ:["🇺🇿","Oʻzbekiston"],NP:["🇳🇵","Nepal"],JP:["🇯🇵","日本"],KR:["🇰🇷","대한민국"],XX:["🌏","Other"]};
+const PLACES={
+ lib:{ko:"중앙도서관 앞",en:"Main library entrance",mn:"Төв номын сангийн үүд"},
+ cafe:{ko:"학생회관 카페",en:"Student union café",mn:"Оюутны төвийн кафе"},
+ bay:{ko:"순천만습지",en:"Suncheon Bay Wetland",mn:"Сүнчон булангийн намгархаг газар"},
+ dorm:{ko:"기숙사 공용주방",en:"Dorm shared kitchen",mn:"Дотуур байрны нийтийн гал тогоо"},
+ gym:{ko:"교내 체육관",en:"Campus gym",mn:"Кампусын спорт заал"},
+ jukdo:{ko:"죽도봉공원",en:"Jukdobong Park",mn:"Жүгдобон цэцэрлэгт хүрээлэн"},
+ field:{ko:"대운동장",en:"Main field",mn:"Том талбай"},
+ room:{ko:"학생회관 동아리방",en:"Student union club room",mn:"Оюутны төвийн дугуйлангийн өрөө"}
+};
+const PEOPLE={
+ a:["Bat-Erdene","MN",["mn","ko"]], b:["Linh","VN",["vi","en","ko"]], c:["민지","KR",["ko","en"]],
+ d:["Wei","CN",["zh","ko"]], e:["Aziz","UZ",["uz","ko","en"]], f:["Sujan","NP",["ne","en"]],
+ g:["준호","KR",["ko"]], h:["Yuki","JP",["ja","ko"]], i:["Anu","MN",["mn","en"]], j:["Thảo","VN",["vi","ko"]]
+};
+const SAMPLE=[
+ {id:"g1",h:"photo",time:"sat",place:"bay",max:6,langs:["ko","en","mn"],m:["a","c","b","h"],
+  title:{ko:"순천만 노을 사진 산책",en:"Sunset photo walk at Suncheon Bay",mn:"Сүнчон буланд нар жаргах зургийн алхалт"},
+  desc:{ko:"휴대폰 카메라면 충분해요. 갈대밭을 걷고 저녁 먹고 헤어져요.",en:"A phone camera is enough. We walk the reed fields, grab dinner, then head home.",mn:"Утасны камер хангалттай. Зэгсэн талбайгаар алхаж, оройн хоол идээд салдаг."}},
+ {id:"g2",h:"study",time:"fri",place:"lib",max:5,langs:["ko","en"],m:["d","e","g"],
+  title:{ko:"금요일 도서관 같이 공부",en:"Friday library study session",mn:"Баасан гарагт номын санд хамт хичээл хийх"},
+  desc:{ko:"각자 공부하고 1시간마다 10분 쉬면서 이야기해요. 과제 질문도 환영.",en:"Everyone studies their own thing, with a 10-minute chat break every hour. Assignment questions welcome.",mn:"Хүн бүр өөрийн хичээлээ хийж, цаг тутамд 10 минут амарч ярилцана. Даалгаврын асуулт тавтай морил."}},
+ {id:"g3",h:"langex",time:"wkday",place:"cafe",max:6,langs:["ko","en"],m:["c","f","i","b"],
+  title:{ko:"한국어–영어 언어교환",en:"Korean–English language exchange",mn:"Солонгос–Англи хэл солилцоо"},
+  desc:{ko:"30분은 한국어, 30분은 영어로 이야기해요. 틀려도 괜찮은 자리예요.",en:"30 minutes in Korean, 30 in English. Mistakes are the point.",mn:"30 минут солонгосоор, 30 минут англиар ярина. Алдаа гаргахаас айх хэрэггүй."}},
+ {id:"g4",h:"cooking",time:"sun",place:"dorm",max:6,langs:["ko","mn","vi"],m:["a","j","g"],
+  title:{ko:"고향 음식 나눠 먹기",en:"Home-country food share",mn:"Эх орныхоо хоолоор дайлцах"},
+  desc:{ko:"매달 한 명이 자기 나라 음식을 요리하고, 나머지는 재료비를 나눠요.",en:"Each month one person cooks a dish from home; the rest split ingredient costs.",mn:"Сар бүр нэг хүн эх орныхоо хоолыг хийж, бусад нь орцны зардлыг хуваана."}},
+ {id:"g5",h:"badminton",time:"wkday",place:"gym",max:4,langs:["ko","en"],m:["e","g","d"],
+  title:{ko:"초보 배드민턴",en:"Beginner badminton",mn:"Анхан шатны бадминтон"},
+  desc:{ko:"라켓은 빌려 드려요. 잘 못 쳐도 돼요.",en:"We'll lend you a racket. No skill needed.",mn:"Цохиур зээлүүлнэ. Сайн тоглохгүй байсан ч болно."}},
+ {id:"g6",h:"hiking",time:"sun",place:"jukdo",max:6,langs:["ko","en","ne"],m:["f","c"],
+  title:{ko:"죽도봉 가벼운 등산",en:"Easy hike up Jukdobong",mn:"Жүгдобон руу хөнгөн авиралт"},
+  desc:{ko:"1시간 코스예요. 정상에서 순천 시내를 봐요.",en:"A one-hour route with a view over Suncheon city.",mn:"1 цагийн зам. Оргилоос Сүнчон хотыг харна."}},
+ {id:"g7",h:"games",time:"fri",place:"room",max:6,langs:["ko","en","zh"],m:["d","h","b","i","g"],
+  title:{ko:"금요일 보드게임 밤",en:"Friday board game night",mn:"Баасан оройн ширээний тоглоом"},
+  desc:{ko:"말을 많이 안 해도 되는 게임부터 시작해요.",en:"We start with games that don't need much talking.",mn:"Их ярих шаардлагагүй тоглоомоос эхэлдэг."}},
+ {id:"g8",h:"dance",time:"sat",place:"room",max:6,langs:["ko","en","vi"],m:["j","h"],
+  title:{ko:"K-pop 댄스 처음부터",en:"K-pop dance from zero",mn:"K-pop бүжиг тэгээс"},
+  desc:{ko:"한 달에 한 곡. 영상 찍는 건 선택이에요.",en:"One song a month. Filming is optional.",mn:"Сард нэг дуу. Бичлэг хийх нь сонголтоор."}},
+ {id:"g9",h:"soccer",time:"sat",place:"field",max:6,langs:["ko","en","uz"],m:["e","a","g","f"],
+  title:{ko:"토요일 풋살 한 판",en:"Saturday futsal",mn:"Бямба гарагийн мини хөл бөмбөг"},
+  desc:{ko:"인원 맞으면 바로 시작해요. 끝나고 편의점 라면.",en:"We play as soon as we have enough people. Convenience-store ramen after.",mn:"Хүн хүрмэгц эхэлнэ. Дараа нь дэлгүүрийн рамён."}}
+];
+const ICE=[
+ {ko:"고향에서 제일 그리운 음식은 뭐예요?",en:"What food from home do you miss most?",mn:"Эх орныхоо ямар хоолыг хамгийн их санадаг вэ?"},
+ {ko:"순천에서 처음 놀란 것은?",en:"What surprised you first in Suncheon?",mn:"Сүнчонд анх юунд гайхсан бэ?"},
+ {ko:"요즘 듣는 노래 한 곡 추천해 주세요.",en:"Recommend one song you're listening to lately.",mn:"Сүүлийн үед сонсож буй нэг дуугаа санал болгоорой."},
+ {ko:"한국어로 제일 좋아하는 단어는?",en:"What's your favorite Korean word?",mn:"Хамгийн дуртай солонгос үг тань юу вэ?"},
+ {ko:"방학에 꼭 가 보고 싶은 곳은?",en:"Where do you want to go this vacation?",mn:"Амралтаараа хаашаа явмаар байна?"},
+ {ko:"전공을 고른 이유가 뭐예요?",en:"Why did you choose your major?",mn:"Яагаад энэ мэргэжлээ сонгосон бэ?"}
+];
+
+/* ---------- state ---------- */
+const store={get(k,d){try{const v=localStorage.getItem("galdae:"+k);return v?JSON.parse(v):d}catch(e){return d}},
+ set(k,v){try{localStorage.setItem("galdae:"+k,JSON.stringify(v))}catch(e){}},
+ clear(){try{Object.keys(localStorage).filter(k=>k.startsWith("galdae:")).forEach(k=>localStorage.removeItem(k))}catch(e){}}};
+let profile=store.get("profile",null);
+let joined=store.get("joined",[]);
+let mine=store.get("mine",[]);
+let theme=store.get("theme","auto");
+L=store.get("lang",null)||((navigator.language||"ko").slice(0,2)==="mn"?"mn":(navigator.language||"").startsWith("en")?"en":"ko");
+let tab="home", filterH="all";
+let draft=profile?JSON.parse(JSON.stringify(profile)):{name:"",country:"MN",langs:[],hobbies:[],times:[]};
+
+const allGroups=()=>[...mine,...SAMPLE];
+const count=g=>g.m.length+(joined.includes(g.id)?1:0);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function applyTheme(){if(theme==="auto")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",theme)}
+applyTheme();
+
+/* ---------- matching ---------- */
+function score(g){
+ if(!profile)return {s:0,r:[]};
+ const r=[];let s=0;
+ if(profile.hobbies.includes(g.h)){s+=50;r.push(t("rHobby",{x:tx(HOBBIES[g.h])}))}
+ const common=g.langs.filter(l=>profile.langs.includes(l));
+ if(common.length){s+=25;r.push(t("rLang",{x:common.map(l=>LANGS[l]).join(", ")}))}
+ if(profile.times.includes(g.time)){s+=20;r.push(t("rTime",{x:tx(TIMES[g.time])}))}
+ const left=g.max-count(g);
+ if(left>0&&left<=3){s+=5;r.push(t("rSmall",{x:left}))}
+ if(left<=0&&!joined.includes(g.id))s-=40;
+ return {s:Math.max(0,Math.min(99,s)),r};
+}
+
+/* ---------- render ---------- */
+const $=id=>document.getElementById(id);
+function header(){
+ return `<div class="top"><div class="brand" aria-label="Galdae">🌾 ${L==="ko"?"갈대":L==="mn"?"Галдэ":"Galdae"}</div>
+ <div class="langs" role="group" aria-label="Language">${["ko","en","mn"].map(l=>`<button aria-pressed="${L===l}" data-lang="${l}">${{ko:"한",en:"EN",mn:"МН"}[l]}</button>`).join("")}</div></div>
+ <p class="proto">${t("proto")}</p>`;
+}
+const reedsSVG=`<svg class="reeds" viewBox="0 0 360 84" preserveAspectRatio="none" aria-hidden="true">${
+ Array.from({length:22},(_,i)=>{const x=8+i*16+(i%3)*3,h=40+((i*37)%38),c=x+((i%2)?6:-6);
+ return `<path style="animation-delay:-${(i%5)*0.7}s" d="M${x} 84 Q${c} ${84-h/2} ${x+(i%2?4:-4)} ${84-h}"/><ellipse cx="${x+(i%2?4:-4)}" cy="${84-h-6}" rx="3" ry="8"/>`}).join("")}</svg>`;
+
+function chipGroup(obj,sel,key,labelFn){
+ return `<div class="chips" role="group">${Object.keys(obj).map(k=>`<button type="button" class="chip" data-toggle="${key}" data-v="${k}" aria-pressed="${sel.includes(k)}">${labelFn(k)}</button>`).join("")}</div>`;
+}
+function profileForm(isEdit){
+ return `<label class="f" for="pName">${t("name")}</label>
+ <input type="text" id="pName" value="${esc(draft.name)}" maxlength="24" autocomplete="nickname">
+ <label class="f" for="pCountry">${t("country")}</label>
+ <select id="pCountry">${Object.entries(COUNTRIES).map(([k,v])=>`<option value="${k}" ${draft.country===k?"selected":""}>${v[0]} ${v[1]}</option>`).join("")}</select>
+ <div class="f" style="font-weight:700;margin:18px 0 8px">${t("langs")}</div>
+ ${chipGroup(LANGS,draft.langs,"langs",k=>LANGS[k])}
+ <div class="f" style="font-weight:700;margin:18px 0 8px">${t("hobbies")}</div>
+ ${chipGroup(HOBBIES,draft.hobbies,"hobbies",k=>HOBBIES[k].e+" "+tx(HOBBIES[k]))}
+ <div class="f" style="font-weight:700;margin:18px 0 8px">${t("times")}</div>
+ ${chipGroup(TIMES,draft.times,"times",k=>tx(TIMES[k]))}
+ <p class="err" id="pErr"></p>
+ <button class="btn" id="pSave">${isEdit?t("save"):t("start")}</button>`;
+}
+
+function row(g){
+ const sc=score(g),j=joined.includes(g.id);
+ return `<button class="row" data-open="${g.id}"><div class="emoji">${HOBBIES[g.h].e}</div>
+ <div class="body"><div class="t">${esc(tx(g.title))}</div>
+ <div class="m">${tx(TIMES[g.time])}, ${tx(PLACES[g.place])}, ${count(g)}/${g.max}${t("people")}</div>
+ ${j?`<div class="joined-tag">✓ ${t("joined")}</div>`:""}</div>
+ <div class="score">${sc.s}%</div></button>`;
+}
+
+function render(){
+ document.documentElement.lang=L;
+ const app=$("app");
+ if(!profile){
+  $("tabs").classList.add("hidden");
+  app.innerHTML=header()+`<section class="hero"><h1>${t("welcome")}</h1><p>${t("welcomeSub")}</p>${reedsSVG}</section>`+profileForm(false);
+  bindForm(false);bindCommon();return;
+ }
+ $("tabs").classList.remove("hidden");
+ renderTabs();
+ let html=header();
+ if(tab==="home"){
+  const ranked=allGroups().map(g=>({g,...score(g)})).sort((a,b)=>b.s-a.s);
+  const notJoined=ranked.filter(x=>!joined.includes(x.g.id));
+  const top=notJoined[0];
+  html+=`<section class="hero" style="padding-top:6px"><h1 style="font-size:26px">${esc(t("hi",{n:profile.name}))}</h1><p>${t("homeSub")}</p></section>`;
+  if(top){
+   html+=`<article class="match"><div class="pct">${top.s}%<small>${t("match")}</small></div>
+   <h2>${HOBBIES[top.g.h].e} ${esc(tx(top.g.title))}</h2>
+   <div class="meta">${tx(TIMES[top.g.time])}, ${tx(PLACES[top.g.place])}</div>
+   <div class="reasons">${top.r.map(x=>`<span>${esc(x)}</span>`).join("")}</div>
+   <button class="btn" data-open="${top.g.id}">${t("open")}</button></article>`;
+   html+=`<h3 class="sec-title">${t("more")}</h3><div class="list">${notJoined.slice(1,5).map(x=>row(x.g)).join("")}</div>`;
+  }
+  const js=allGroups().filter(g=>joined.includes(g.id));
+  html+=`<h3 class="sec-title">${t("myGroups")}</h3>`+(js.length?`<div class="list">${js.map(row).join("")}</div>`:`<p class="empty">${t("noMine")}</p>`);
+ }
+ if(tab==="groups"){
+  html+=`<h1 class="sec-title" style="font-size:26px">${t("groupsTitle")}</h1>
+  <div class="chips filter"><button class="chip" data-filter="all" aria-pressed="${filterH==="all"}">${t("all")}</button>
+  ${Object.keys(HOBBIES).map(k=>`<button class="chip" data-filter="${k}" aria-pressed="${filterH===k}">${HOBBIES[k].e} ${tx(HOBBIES[k])}</button>`).join("")}</div>`;
+  const list=allGroups().filter(g=>filterH==="all"||g.h===filterH).sort((a,b)=>score(b).s-score(a).s);
+  html+=list.length?`<div class="list">${list.map(row).join("")}</div>`:`<p class="empty">${t("noGroups")}</p><button class="btn ghost" data-tab="create">${t("gCreate")}</button>`;
+ }
+ if(tab==="create"){
+  html+=`<h1 class="sec-title" style="font-size:26px">${t("createTitle")}</h1><p class="hint">${t("createSub")}</p>
+  <label class="f" for="gT">${t("gTitle")}</label><input type="text" id="gT" maxlength="40" placeholder="${t("gTitlePh")}">
+  <label class="f" for="gH">${t("gHobby")}</label><select id="gH">${Object.keys(HOBBIES).map(k=>`<option value="${k}">${HOBBIES[k].e} ${tx(HOBBIES[k])}</option>`).join("")}</select>
+  <label class="f" for="gTi">${t("gTime")}</label><select id="gTi">${Object.keys(TIMES).map(k=>`<option value="${k}">${tx(TIMES[k])}</option>`).join("")}</select>
+  <label class="f" for="gP">${t("gPlace")}</label><select id="gP">${Object.keys(PLACES).map(k=>`<option value="${k}">${tx(PLACES[k])}</option>`).join("")}</select>
+  <label class="f" for="gS">${t("gSize")}</label><select id="gS">${[3,4,5,6].map(n=>`<option ${n===4?"selected":""}>${n}</option>`).join("")}</select>
+  <div class="f" style="font-weight:700;margin:18px 0 8px">${t("gLang")}</div>
+  <div class="chips">${Object.keys(LANGS).map(k=>`<button type="button" class="chip" data-glang="${k}" aria-pressed="${profile.langs.includes(k)}">${LANGS[k]}</button>`).join("")}</div>
+  <p class="err" id="gErr"></p><button class="btn" id="gCreate">${t("gCreate")}</button>`;
+ }
+ if(tab==="me"){
+  html+=`<h1 class="sec-title" style="font-size:26px">${t("meTitle")}</h1>`+profileForm(true)+
+  `<div class="f" style="font-weight:700;margin:26px 0 8px">${t("dark")}</div>
+  <div class="chips">${["auto","light","dark"].map(k=>`<button class="chip" data-theme-set="${k}" aria-pressed="${theme===k}">${t({auto:"thAuto",light:"thLight",dark:"thDark"}[k])}</button>`).join("")}</div>
+  <div style="margin-top:28px"><button class="btn warn" id="reset">${t("reset")}</button></div>`;
+ }
+ app.innerHTML=html;
+ bindCommon();
+ if(tab==="me")bindForm(true);
+ if(tab==="create")bindCreate();
+}
+
+function renderTabs(){
+ const tabs=[["home","🌾","tabHome"],["groups","🗂️","tabGroups"],["create","➕","tabCreate"],["me","🙂","tabMe"]];
+ $("tabsIn").innerHTML=tabs.map(([k,e,l])=>`<button data-tab="${k}" ${tab===k?'aria-current="page"':""}><span aria-hidden="true">${e}</span>${t(l)}</button>`).join("");
+ $("tabsIn").querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render();window.scrollTo(0,0)});
+}
+
+function bindCommon(){
+ document.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>{
+  if(!profile||tab==="me")collectDraft();
+  L=b.dataset.lang;store.set("lang",L);render()});
+ document.querySelectorAll("#app [data-open]").forEach(b=>b.onclick=()=>openSheet(b.dataset.open));
+ document.querySelectorAll("#app [data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render()});
+ document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{filterH=b.dataset.filter;render()});
+ document.querySelectorAll("[data-theme-set]").forEach(b=>b.onclick=()=>{collectDraft();theme=b.dataset.themeSet;store.set("theme",theme);applyTheme();render()});
+ const r=$("reset");if(r)r.onclick=()=>{if(confirm(t("resetQ"))){store.clear();profile=null;joined=[];mine=[];theme="auto";applyTheme();
+  draft={name:"",country:"MN",langs:[],hobbies:[],times:[]};tab="home";render()}};
+}
+function collectDraft(){const n=$("pName"),c=$("pCountry");if(n)draft.name=n.value;if(c)draft.country=c.value}
+function bindForm(isEdit){
+ document.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=()=>{
+  const arr=draft[b.dataset.toggle],v=b.dataset.v,i=arr.indexOf(v);
+  i>=0?arr.splice(i,1):arr.push(v);b.setAttribute("aria-pressed",i<0)});
+ $("pSave").onclick=()=>{
+  collectDraft();draft.name=draft.name.trim();
+  if(!draft.name||!draft.langs.length||!draft.hobbies.length||!draft.times.length){$("pErr").textContent=t("needAll");return}
+  profile=JSON.parse(JSON.stringify(draft));store.set("profile",profile);
+  if(isEdit)toast(t("saved"));else tab="home";
+  render();
+ };
+}
+function bindCreate(){
+ const sel=[...profile.langs];
+ document.querySelectorAll("[data-glang]").forEach(b=>b.onclick=()=>{
+  const v=b.dataset.glang,i=sel.indexOf(v);i>=0?sel.splice(i,1):sel.push(v);b.setAttribute("aria-pressed",i<0)});
+ $("gCreate").onclick=()=>{
+  const title=$("gT").value.trim();
+  if(!title||!sel.length){$("gErr").textContent=t("gNeed");return}
+  const g={id:"u"+Date.now(),h:$("gH").value,time:$("gTi").value,place:$("gP").value,max:+$("gS").value,langs:[...sel],m:[],
+   title:{ko:title,en:title,mn:title},desc:{ko:"",en:"",mn:""},own:true};
+  mine.unshift(g);store.set("mine",mine);
+  joined.push(g.id);store.set("joined",joined);
+  toast(t("created"));tab="home";render();openSheet(g.id);
+ };
+}
+
+/* ---------- sheet ---------- */
+let lastFocus=null;
+function openSheet(id){
+ const g=allGroups().find(x=>x.id===id);if(!g)return;
+ lastFocus=document.activeElement;
+ const j=joined.includes(g.id),n=count(g),full=n>=g.max&&!j;
+ const ice=[...ICE].sort(()=>Math.random()-.5).slice(0,3);
+ const me=j?`<div class="member"><div class="av">${COUNTRIES[profile.country][0]}</div><div><strong>${esc(profile.name)}</strong> (${t("you")})<br><small>${profile.langs.map(l=>LANGS[l]).join(", ")}</small></div></div>`:"";
+ const sc=score(g);
+ $("sheet").innerHTML=`<div class="grab"></div>
+ <div class="emoji" style="width:56px;height:56px;font-size:28px">${HOBBIES[g.h].e}</div>
+ <h2 id="sheetTitle">${esc(tx(g.title))}</h2>
+ ${tx(g.desc)?`<p style="margin:0;color:var(--muted)">${esc(tx(g.desc))}</p>`:""}
+ ${sc.r.length?`<div class="chips" style="margin-top:12px">${sc.r.map(x=>`<span class="chip" style="font-size:13px">${esc(x)}</span>`).join("")}</div>`:""}
+ <dl class="facts"><dt>${t("when")}</dt><dd>${tx(TIMES[g.time])}</dd><dt>${t("where")}</dt><dd>${tx(PLACES[g.place])}</dd>
+ <dt>${t("langInGroup")}</dt><dd>${g.langs.map(l=>LANGS[l]).join(", ")}</dd></dl>
+ <h3 style="font-size:17px;margin-top:18px">${t("membersT",{a:n,b:g.max})}</h3>
+ <div class="members">${me}${g.m.map(k=>{const p=PEOPLE[k];return `<div class="member"><div class="av">${COUNTRIES[p[1]][0]}</div><div><strong>${esc(p[0])}</strong><br><small>${p[2].map(l=>LANGS[l]).join(", ")}</small></div></div>`}).join("")}</div>
+ <h3 style="font-size:17px;margin-top:20px">${t("iceT")}</h3>
+ ${ice.map(q=>`<div class="ice">${esc(tx(q))}</div>`).join("")}
+ <p class="safe">🔒 ${t("safe")}</p>
+ ${j?`<button class="btn ghost" id="jBtn">${t("leave")}</button>`:full?`<button class="btn ghost" disabled>${t("full")}</button>`:`<button class="btn" id="jBtn">${t("join")}</button>`}`;
+ $("sheet").setAttribute("aria-labelledby","sheetTitle");
+ $("overlay").classList.add("open");$("sheet").classList.add("open");
+ const jb=$("jBtn");
+ if(jb){jb.onclick=()=>{
+  if(j){joined=joined.filter(x=>x!==g.id);toast(t("left"))}else{joined.push(g.id);toast(t("joined"))}
+  store.set("joined",joined);render();openSheet(g.id)};setTimeout(()=>jb.focus(),50)}
+}
+function closeSheet(){$("overlay").classList.remove("open");$("sheet").classList.remove("open");if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+$("overlay").onclick=closeSheet;
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
+let ty=null;$("sheet").addEventListener("touchstart",e=>{if($("sheet").scrollTop<=0)ty=e.touches[0].clientY},{passive:true});
+$("sheet").addEventListener("touchend",e=>{if(ty!==null&&e.changedTouches[0].clientY-ty>80)closeSheet();ty=null});
+
+let tt;function toast(m){const el=$("toast");el.textContent=m;el.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>el.classList.remove("show"),1800)}
+
+render();
+</script>
+</body>
+</html>
